@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    release: {{ .Release.Name }}
+    gitlab-runner: kubernetes-deployer
+  name: {{ .Values.runner.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gitlab-runner: kubernetes-deployer
+      chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+      heritage: {{ .Release.Service }}
+      release: {{ .Release.Name }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 50%
+  template:
+    metadata:
+      labels:
+        gitlab-runner: kubernetes-deployer
+        chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Values.rbac.user }}
+      restartPolicy: "Always"
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsUser: 0
+        fsGroup: 995
+      containers:
+        - name: {{ .Values.runner.name }}-container
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GITLAB_RUNNER_URL
+              value: {{ .Values.runner.url }}
+            - name: GITLAB_RUNNER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.runner.name }}-token
+                  key: token
+          resources:
+{{ toYaml .Values.gitlabrunner.resources | indent 12 }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["kill", "-SIGQUIT", "1", "&&", "timeout", "300", "tail", "--pid=1", "-f", "/dev/null"]
+          securityContext:
+            allowPrivilegeEscalation: false
+

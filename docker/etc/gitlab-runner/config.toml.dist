@@ -1,0 +1,14 @@
+concurrent = 1
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "Kubernetes deployer"
+  url = "{gitlab-runner-url}"
+  token = "{gitlab-runner-token}"
+  executor = "shell"
+  builds_dir = "/home/gitlab-runner/builds"
+  [runners.cache]
+

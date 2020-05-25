@@ -1,0 +1,18 @@
+stages:
+- deploy
+
+before_script:
+- hostname
+
+kubernetes-deploy:
+  stage: deploy
+  tags:
+  - kube-deployer
+  only:
+  - dev
+  when: manual
+  script:
+  - - sed -ie "s/{DEPLOY_VERSION_TAG}/$CI_PIPELINE_ID/g" simpleservice.yaml
+  - kubectl -n example2 apply -f simpleservice.yaml
+  - sleep 15
+  - kubectl -n example2 get po,svc,ing,ep

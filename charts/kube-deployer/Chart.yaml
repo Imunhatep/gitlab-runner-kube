@@ -1,0 +1,10 @@
+apiVersion: v1
+appVersion: deployer-3
+description: Kube deployer
+keywords:
+- gitlab
+- gitlab-runner
+- kubernetes
+name: kube-deployer
+version: 1.0.0
+sources:

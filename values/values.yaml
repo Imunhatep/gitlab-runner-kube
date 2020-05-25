@@ -1,0 +1,26 @@
+image:
+  repository: imunhatep/meistar
+  tag: deployer-5
+
+runner:
+  name: kube-deployer
+  url: https://gitlab.com/
+  token: tokenkey
+
+rbac:
+  role: kube-deployer
+  user: kube-deployer
+  namespaces: []
+  # - app-stage-1
+  # - app-stage-2
+
+gitlabrunner:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 64Mi
+
+
