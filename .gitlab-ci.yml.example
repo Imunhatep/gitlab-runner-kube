@@ -12,7 +12,6 @@ kubernetes-deploy:
   - dev
   when: manual
   script:
-  - - sed -ie "s/{DEPLOY_VERSION_TAG}/$CI_PIPELINE_ID/g" simpleservice.yaml
-  - kubectl -n example2 apply -f simpleservice.yaml
+  - kubectl -n example apply -f some-example.yaml
   - sleep 15
-  - kubectl -n example2 get po,svc,ing,ep
+  - kubectl -n example get po,svc,ing,ep
