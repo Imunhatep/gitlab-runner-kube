@@ -1,6 +1,6 @@
 image:
   repository: imunhatep/meistar
-  tag: deployer-5
+  tag: deployer-17
 
 runner:
   name: kube-deployer
